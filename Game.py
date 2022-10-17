@@ -30,7 +30,7 @@ class Game:
             return True
         else:
             return False
-
+    
     @staticmethod
     def get_list_of_towns():
         target_filename = "towns.txt"
