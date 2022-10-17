@@ -30,7 +30,7 @@ class Game:
             return True
         else:
             return False
-    
+
     @staticmethod
     def get_list_of_towns():
         target_filename = "towns.txt"
@@ -39,6 +39,7 @@ class Game:
             data = json.loads(text)
         return data
 
-    
-
-    
+    def make_turn(self, answer):
+        self.pull_info_in_used_towns(answer)
+        self.remove_from_towns(answer)
+        return True
