@@ -43,3 +43,23 @@ class Game:
         self.pull_info_in_used_towns(answer)
         self.remove_from_towns(answer)
         return True
+
+    def bot_choose_town(self):
+        bot_towns = []
+        if self.get_current_letter() == '':
+            bot_answer = self.towns[random.randint(0, len(self.towns)-1)]
+            self.analyse_answer(bot_answer)
+            return bot_answer
+        else:
+            for town in self.towns:
+                if town[0] == self.get_current_letter():
+                    bot_towns.append(town)
+            if not bot_towns:
+                print("Бот не может найти ответ")
+                return ""
+            bot_answer = bot_towns[random.randint(0, len(bot_towns) - 1)]
+        if (not bot_answer in self.get_used_towns()):
+            self.analyse_answer(bot_answer)
+            del bot_towns
+            self.make_turn(bot_answer)
+            return bot_answer
