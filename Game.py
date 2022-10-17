@@ -63,3 +63,25 @@ class Game:
             del bot_towns
             self.make_turn(bot_answer)
             return bot_answer
+        
+        def analyse_answer(self, answer):
+        state = False
+        if type(answer) not in [str]:
+            print("Название города должно состоять из букв!")
+            return state
+        if self.check_repeat(answer):
+            if self.check_town(answer):
+                if self.check_first_letter(answer):
+                    if self.check_last_letter(answer):
+                        self.set_current_letter(answer[-1])
+                    else:
+                        self.set_current_letter(answer[-2])
+                    state = True
+        return state
+
+    def check_first_letter(self, answer):
+        if answer.startswith(self.get_current_letter()):
+            return True
+        else:
+            print("Выбран неверный город")
+            return False
