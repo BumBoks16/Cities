@@ -113,3 +113,44 @@ class Game:
             return True
         else:
             return False
+
+    def game_reload(self):
+        self.player_win = False
+        self.current_letter = ''
+        self.towns = []
+        for i in self.original_towns:
+            self.towns.append(i)
+        self.used_towns = []
+
+    def set_current_letter(self, letter):
+        self.current_letter = letter.upper()
+
+    def set_end_game_state(self):
+        self.end_game_state = True
+
+    def pull_info_in_used_towns(self, town):
+        self.used_towns.append(town)
+
+    def remove_from_towns(self, town):
+        self.towns.remove(town)
+
+    def set_player_turn(self, argument):
+        self.player_turn = argument
+
+    def get_player_turn(self):
+        return self.player_turn
+
+    def get_end_game_state(self):
+        return self.end_game_state
+
+    def get_current_letter(self):
+        return self.current_letter
+
+    def get_used_towns(self):
+        return self.used_towns
+
+    def get_towns(self):
+        return self.towns
+
+    def get_bad_chars(self):
+        return self.bad_chars
