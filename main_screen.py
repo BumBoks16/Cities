@@ -1,6 +1,17 @@
 from tkinter import *
 from Game import Game
 
+def auto_lose():
+    create_endgame_frame()
+
+def reboot_button_click():
+    game_session.game_reload()
+    main_frame.place_forget()
+    end_frame.place_forget()
+    create_main_game_frame()
+    set_start_labels()
+    
+
 def enter_button_click():
     temp = entry_space.get()
     if game_session.pull_answer(temp):
@@ -50,6 +61,21 @@ def create_start_game_frame():
     start_frame.place(relx=0.01,rely = 0.01, relwidth = 0.98, relheight = 0.98)
     main_title_start.pack(side = TOP, padx=1, pady=1)
     start_button.pack(side = BOTTOM, pady = 10)
+
+def create_endgame_frame():
+    start_frame.place_forget()
+    main_frame.place_forget()
+    end_frame.place(relx=0.01,rely = 0.01, relwidth = 0.98, relheight = 0.98)
+    if (not game_session.get_player_win()):
+        state_text = 'Вы проиграли'
+    else:
+        state_text = 'Вы победили'
+
+    end_title.configure(text = state_text)
+    end_title.pack(anchor='center')
+    reboot_button.pack(side = BOTTOM, anchor = 'center', pady = 10)
+
+    
 
 game_session = Game()
 window = Tk()
