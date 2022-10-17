@@ -85,3 +85,31 @@ class Game:
         else:
             print("Выбран неверный город")
             return False
+
+    def check_town(self, answer):
+        if answer in self.get_towns():
+            return True
+        else:
+            print(self.get_towns())
+            print("Такого города не существует")
+            return False
+
+    def answer_rebuild(self,answer):
+        if (len(answer.split()) > 1):
+            buff = answer
+            answer = ""
+            for name in buff.split():
+                if answer != "":
+                    answer += " "
+                answer += name.capitalize()
+        else:
+            answer = answer.capitalize()
+        return (answer)
+
+    def pull_answer(self, answer):
+        answer = self.answer_rebuild(answer)
+        if self.analyse_answer(answer):
+            self.make_turn(answer)
+            return True
+        else:
+            return False
