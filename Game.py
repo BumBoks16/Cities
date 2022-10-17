@@ -22,6 +22,13 @@ class Game:
         self.original_towns = set(self.towns)
         self.original_towns = list(self.towns)
 
+    def check_repeat(self, answer):
+        if answer in self.get_used_towns():
+            print("Такой город уже был!")
+            return False
+        else:
+            return True
+
     def set_player_win(self):
         self.player_win = True
 
@@ -29,61 +36,6 @@ class Game:
         if (self.player_win):
             return True
         else:
-            return False
-
-    @staticmethod
-    def get_list_of_towns():
-        target_filename = "towns.txt"
-        with open(target_filename, "r", encoding='utf-8') as file:
-            text = file.read()
-            data = json.loads(text)
-        return data
-
-    def make_turn(self, answer):
-        self.pull_info_in_used_towns(answer)
-        self.remove_from_towns(answer)
-        return True
-
-    def bot_choose_town(self):
-        bot_towns = []
-        if self.get_current_letter() == '':
-            bot_answer = self.towns[random.randint(0, len(self.towns)-1)]
-            self.analyse_answer(bot_answer)
-            return bot_answer
-        else:
-            for town in self.towns:
-                if town[0] == self.get_current_letter():
-                    bot_towns.append(town)
-            if not bot_towns:
-                print("Бот не может найти ответ")
-                return ""
-            bot_answer = bot_towns[random.randint(0, len(bot_towns) - 1)]
-        if (not bot_answer in self.get_used_towns()):
-            self.analyse_answer(bot_answer)
-            del bot_towns
-            self.make_turn(bot_answer)
-            return bot_answer
-        
-        def analyse_answer(self, answer):
-        state = False
-        if type(answer) not in [str]:
-            print("Название города должно состоять из букв!")
-            return state
-        if self.check_repeat(answer):
-            if self.check_town(answer):
-                if self.check_first_letter(answer):
-                    if self.check_last_letter(answer):
-                        self.set_current_letter(answer[-1])
-                    else:
-                        self.set_current_letter(answer[-2])
-                    state = True
-        return state
-
-    def check_first_letter(self, answer):
-        if answer.startswith(self.get_current_letter()):
-            return True
-        else:
-            print("Выбран неверный город")
             return False
 
     def check_town(self, answer):
@@ -110,6 +62,63 @@ class Game:
         answer = self.answer_rebuild(answer)
         if self.analyse_answer(answer):
             self.make_turn(answer)
+            return True
+        else:
+            return False
+
+    def analyse_answer(self, answer):
+        state = False
+        if type(answer) not in [str]:
+            print("Название города должно состоять из букв!")
+            return state
+        if self.check_repeat(answer):
+            if self.check_town(answer):
+                if self.check_first_letter(answer):
+                    if self.check_last_letter(answer):
+                        self.set_current_letter(answer[-1])
+                    else:
+                        self.set_current_letter(answer[-2])
+                    state = True
+        return state
+
+    def check_first_letter(self, answer):
+        if answer.startswith(self.get_current_letter()):
+            return True
+        else:
+            print("Выбран неверный город")
+            return False
+
+    def bot_choose_town(self):
+        bot_towns = []
+        if self.get_current_letter() == '':
+            bot_answer = self.towns[random.randint(0, len(self.towns)-1)]
+            self.analyse_answer(bot_answer)
+            return bot_answer
+        else:
+            for town in self.towns:
+                if town[0] == self.get_current_letter():
+                    bot_towns.append(town)
+            if not bot_towns:
+                print("Бот не может найти ответ")
+                return ""
+            bot_answer = bot_towns[random.randint(0, len(bot_towns) - 1)]
+        if (not bot_answer in self.get_used_towns()):
+            self.analyse_answer(bot_answer)
+            del bot_towns
+            self.make_turn(bot_answer)
+            return bot_answer
+
+    def make_turn(self, answer):
+        self.pull_info_in_used_towns(answer)
+        self.remove_from_towns(answer)
+        return True
+
+    def print_info(self):
+        print(self.used_towns)
+        print(self.towns)
+
+    def check_in_original_towns(self, answer):
+        if (answer in self.original_towns):
             return True
         else:
             return False
@@ -154,3 +163,17 @@ class Game:
 
     def get_bad_chars(self):
         return self.bad_chars
+
+    @staticmethod
+    def get_list_of_towns():
+        target_filename = "towns.txt"
+        with open(target_filename, "r", encoding='utf-8') as file:
+            text = file.read()
+            data = json.loads(text)
+        return data
+
+    def check_last_letter(self, answer):  # Проверяем последнюю букву
+        if answer[-1] in self.get_bad_chars():
+            return False
+        else:
+            return True
